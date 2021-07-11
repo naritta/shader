@@ -47,7 +47,8 @@ int main()
     
     // build and compile our shader program
     // ------------------------------------
-    Shader ourShader("shader.vert", "shader.frag"); // you can name your shader files however you like
+//    Shader ourShader("shader.vert", "shader.frag"); // you can name your shader files however you like
+    Shader ourShader("/Users/ritta/Desktop/shader/game/game/shader.vert", "/Users/ritta/Desktop/shader/game/game/shader.frag"); // you can name your shader files however you like
     
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
@@ -59,37 +60,38 @@ int main()
 //    };
     float positions_vertices[] = {
         // positions
+        -1.0f, -1.0f, 0.0f,
         1.0f, -1.0f, 0.0f,
-        -1.0f, 1.0f, 0.0f,
-        1.0f,  1.0f, 0.0f,
+        0.0f,  1.0f, 0.0f,
     };
     
     float colors_vertices[] = {
         // colors
-        1.0f, -1.0f, 0.0f,
-        -1.0f, 1.0f, 0.0f,
-        1.0f,  1.0f, 0.0f,
+        1.0f, 0.0f, 0.0f,
+        0.0f, 1.0f, 0.0f,
+        0.0f,  0.0f, 1.0f,
     };
     
     unsigned int positions_VBO, colors_VBO, VAO;
     glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &positions_VBO);
-    glGenBuffers(1, &colors_VBO);
-//     bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
     glBindVertexArray(VAO);
     
+    glGenBuffers(1, &positions_VBO);
     glBindBuffer(GL_ARRAY_BUFFER, positions_VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(positions_vertices), positions_vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(positions_vertices), positions_vertices, GL_STREAM_DRAW);
     
+    glGenBuffers(1, &colors_VBO);
     glBindBuffer(GL_ARRAY_BUFFER, colors_VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(colors_vertices), colors_vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(colors_vertices), colors_vertices, GL_STREAM_DRAW);
     
     // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glBindBuffer(GL_ARRAY_BUFFER, positions_VBO);
     glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
     // color attribute
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glBindBuffer(GL_ARRAY_BUFFER, colors_VBO);
     glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
     
     // You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
     // VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
