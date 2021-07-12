@@ -103,6 +103,28 @@ int main()
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
     
+    // Get a handle for our "MVP" uniform
+    GLuint MatrixID = glGetUniformLocation(shaderID, "MVP");
+    
+    // Projection matrix : 90° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
+    glm::mat4 Projection = glm::perspective(glm::radians(90.0f), 4.0f / 3.0f, 0.1f, 100.0f);
+    // Or, for an ortho camera :
+    //glm::mat4 Projection = glm::ortho(-10.0f,10.0f,-10.0f,10.0f,0.0f,100.0f); // In world coordinates
+    
+    // Camera matrix
+    glm::mat4 View       = glm::lookAt(
+                                       glm::vec3(0,0,-2), // Camera is at (0,0,0), in World Space
+                                       glm::vec3(0,0,0), // and looks at the origin
+                                       glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
+                                       );
+    
+//    glm::mat4 Model = myTranslationMatrix * myRotationMatrix * myScaleMatrix;
+    glm::mat4 Model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+    Model = glm::rotate(Model, 0.0f, glm::vec3(1.0f));
+    Model = glm::scale(Model, glm::vec3(1.0f));
+    // Our ModelViewProjection : multiplication of our 3 matrices
+    glm::mat4 MVP        = Projection * View * Model; // Remember, matrix multiplication is the other way around
+    
     // You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
     // VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
     // glBindVertexArray(0);
@@ -149,6 +171,7 @@ int main()
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
         
+        glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
         glUniform2f(glGetUniformLocation(shaderID, "resolution"), SCR_WIDTH, SCR_WIDTH);
         
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)

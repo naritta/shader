@@ -5,11 +5,11 @@ from OpenGL.GLUT import *
 
 def display():
     glClear(GL_COLOR_BUFFER_BIT)
+    glColor3f(1,0,0);
 
-    glEnableClientState(GL_VERTEX_ARRAY)
-    
-    #gluLookAt(150.0,100.0,-200.0,0.0,0.0,0.0,0.0,1.0,0.0)
-    glutSolidSphere(0.5, 10, 10)
+    gluLookAt(1.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,1.0)
+    #glTranslatef(0.5,0,0)
+    glutSolidSphere(1.0,16,16)
 
     glFlush()
 
