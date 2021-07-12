@@ -13,7 +13,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
 
 // settings
-const unsigned int SCR_WIDTH = 800;
+const unsigned int SCR_WIDTH = 600;
 const unsigned int SCR_HEIGHT = 600;
 
 using namespace std;
@@ -70,10 +70,10 @@ int main()
     //    };
     float positions_vertices[] = {
         // positions
-        -1.0f, -1.0f, 0.5f,
-        1.0f, -1.0f, 0.5f,
-        -1.0f,  1.0f, 0.5f,
-        1.0f,  1.0f, 0.5f,
+        -1.0f, -1.0f, 0.0f,
+        1.0f, -1.0f, 0.0f,
+        -1.0f,  1.0f, 0.0f,
+        1.0f,  1.0f, 0.0f,
     };
     
     unsigned int positions_VBO, colors_VBO, VAO;
@@ -127,7 +127,8 @@ int main()
         
         // render
         // ------
-        glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
+//        glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
+        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         
         // render the triangle
