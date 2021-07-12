@@ -1,7 +1,13 @@
-#include <glad/glad.h>
+#include <GL/glew.h>
+
 #include <GLFW/glfw3.h>
-#include "shader.h"
+#include "shader.hpp"
 #include <iostream>
+
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtx/norm.hpp"
+using namespace glm;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
@@ -37,19 +43,23 @@ int main()
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     
-    // glad: load all OpenGL function pointers
-    // ---------------------------------------
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    {
-        std::cout << "Failed to initialize GLAD" << std::endl;
+    // Initialize GLEW
+    glewExperimental = true; // Needed for core profile
+    if (glewInit() != GLEW_OK) {
+        fprintf(stderr, "Failed to initialize GLEW\n");
+        getchar();
+        glfwTerminate();
         return -1;
     }
     
     // build and compile our shader program
     // ------------------------------------
-//    Shader ourShader("shader.vert", "shader.frag"); // you can name your shader files however you like
-    Shader ourShader("/Users/ritta/Desktop/shader/game/game/shader.vert", "/Users/ritta/Desktop/shader/game/game/shader.frag"); // you can name your shader files however you like
-    
+////    Shader ourShader("shader.vert", "shader.frag"); // you can name your shader files however you like
+//    Shader ourShader("/Users/ritta/Desktop/shader/game/game/shader.vert", "/Users/ritta/Desktop/shader/game/game/shader.frag"); // you can name your shader files however you like
+    // Create and compile our GLSL program from the shaders
+    GLuint shaderID = LoadShaders("/Users/ritta/Desktop/shader/game/game/shader.vert", "/Users/ritta/Desktop/shader/game/game/shader.frag");
+//    GLuint shaderID = LoadShaders("shader.vert", "shader.frag");
+
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
 //    float vertices[] = {
@@ -69,7 +79,7 @@ int main()
         // colors
         1.0f, 0.0f, 0.0f,
         0.0f, 1.0f, 0.0f,
-        0.0f,  0.0f, 1.0f,
+        0.0f,  0.0f, 2.0f,
     };
     
     unsigned int positions_VBO, colors_VBO, VAO;
@@ -135,11 +145,11 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT);
         
         // render the triangle
-        ourShader.use();
+        glUseProgram(shaderID);
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
         
-        glUniform2f(glGetUniformLocation(ourShader.ID, "resolution"), SCR_WIDTH, SCR_WIDTH);
+        glUniform2f(glGetUniformLocation(shaderID, "resolution"), SCR_WIDTH, SCR_WIDTH);
         
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
@@ -151,7 +161,8 @@ int main()
     // ------------------------------------------------------------------------
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &positions_VBO);
-//    glDeleteBuffers(1, &colors_VBO);
+    glDeleteBuffers(1, &colors_VBO);
+    glDeleteProgram(shaderID);
     
     // glfw: terminate, clearing all previously allocated GLFW resources.
     // ------------------------------------------------------------------
