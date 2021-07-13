@@ -4,6 +4,7 @@ out vec4 FragColor;
 uniform vec2 resolution;
 
 float sphereSize = 0.6;
+vec3 spherePosition = vec3(0.5, 0.5, 0.5);
 
 float dist_func(vec3 position, float size) {
     return length(position) - size;
@@ -18,7 +19,7 @@ vec3 normal(vec3 pos, float size) {
     ));
 }
 
-void main( void ) {
+void main(void) {
     vec2 pixelPosition2d = (gl_FragCoord.xy * 2.0 - resolution.xy) / min(resolution.x, resolution.y);
     vec3 cameraPosition = vec3(0.0, 0.0, 10.0);
     float screenZ = 4.0;
@@ -29,9 +30,10 @@ void main( void ) {
     vec3 color = vec3(0.0);
     
     for (int i = 0; i < 99; i++) {
-        float dist = dist_func(cameraPosition, sphereSize);
+        vec3 cameraToSphere = cameraPosition-spherePosition;
+        float dist = dist_func(cameraToSphere, sphereSize);
         if (dist < 0.0001) {
-            vec3 norm = normal(cameraPosition, sphereSize);
+            vec3 norm = normal(cameraToSphere, sphereSize);
             float diff = dot(norm, lightDirection);
             color = vec3(diff);
             break;
