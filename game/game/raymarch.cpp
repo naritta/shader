@@ -57,7 +57,7 @@ int main()
     ////    Shader ourShader("shader.vert", "shader.frag"); // you can name your shader files however you like
     //    Shader ourShader("/Users/ritta/Desktop/shader/game/game/shader.vert", "/Users/ritta/Desktop/shader/game/game/shader.frag"); // you can name your shader files however you like
     // Create and compile our GLSL program from the shaders
-    GLuint shaderID = LoadShaders("/Users/ritta/Desktop/shader/game/game/raymarch.vert", "/Users/ritta/Desktop/shader/game/game/raymarch.frag");
+    GLuint shaderID = LoadShaders("/Users/ritta/Desktop/shader/game/game/board.vert", "/Users/ritta/Desktop/shader/game/game/raytracing.frag");
     //    GLuint shaderID = LoadShaders("shader.vert", "shader.frag");
     
     // set up vertex data (and buffer(s)) and configure vertex attributes
