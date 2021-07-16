@@ -15,16 +15,22 @@ struct Sphere{
     vec3  color;
 };
 
-bool intersectSphere(Ray R, Sphere S){
+vec3 lightDirection = normalize(vec3(0.0, 0.0, 1.0));
+
+vec3 intersectSphere(Ray R, Sphere S){
     vec3  a = R.origin - S.position;
     float b = dot(a, R.direction);
     float c = dot(a, a) - (S.radius * S.radius);
     float d = b * b - c;
     if(d > 0.0){
         float t = -b - sqrt(d);
-        return (t > 0.0);
+        vec3 hitPoint = R.origin + R.direction * t;
+        vec3 normal = normalize(hitPoint - S.position);
+        float diff = dot(normal, lightDirection);
+        vec3 color = vec3(diff);
+        return color;
     }
-    return false;
+    return vec3(0.0);
 }
 
 void main(void){
@@ -44,9 +50,7 @@ void main(void){
     
     // hit check
     vec3 destColor = vec3(0.0);
-    if(intersectSphere(ray, sphere)){
-        destColor = sphere.color;
-    }
+    destColor = intersectSphere(ray, sphere);
     
     FragColor = vec4(destColor, 1.0);
 }
